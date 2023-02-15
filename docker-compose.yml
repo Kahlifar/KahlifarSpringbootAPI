@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: mariadb:latest
+    container_name: kahlifardb
+    ports:
+      - 3306:3306
+    volumes:
+      - "./docker/database:/var/lib/mysql"
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_PASSWORD=${KAHLIFAR_PASSWORD}
+      - MYSQL_USER=${KAHLIFAR_USER}
+      - MYSQL_DATABASE=${KAHLIFAR_DATABASE}
