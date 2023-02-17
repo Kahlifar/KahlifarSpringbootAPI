@@ -1,5 +1,6 @@
 package ch.fwesterath.kahlifarspringapi.controller;
 
+import ch.fwesterath.kahlifarspringapi.models.DiscordUser;
 import ch.fwesterath.kahlifarspringapi.models.User;
 import ch.fwesterath.kahlifarspringapi.repository.DiscordUserRepository;
 import ch.fwesterath.kahlifarspringapi.repository.UserRepository;
@@ -29,11 +30,6 @@ public class UserController {
         return userRepository.findById(id).get();
     }
 
-//    @GetMapping("/users/byDiscordId/{id}")
-//    public User getUserByDiscordId(@PathVariable("id") String id) {
-//        return discordUserRepository.findBy("discordId", id).getUser(), Long.class));
-//    }
-
     @PostMapping("/users")
     public User createUser(@RequestBody User user) {
         try {
@@ -46,15 +42,10 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public User updateUser(@PathVariable("id") Integer id, @RequestBody User user) {
+    public User updateUser(@PathVariable("id") Long id, @RequestBody User user) {
         try {
-            User userToUpdate = userRepository.findById(id).get();
-            System.out.println(userToUpdate.getUsername());
-            userToUpdate.setUsername(user.getUsername());
-            userToUpdate.setBirthday(user.getBirthday());
-            userToUpdate.setDiscordUsers(user.getDiscordUsers());
-            System.out.println(user.getDiscordUsers());
-            return userToUpdate;
+            user.setId(id);
+            return userRepository.save(user);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.toString());
         }

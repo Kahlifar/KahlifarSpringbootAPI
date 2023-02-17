@@ -1,7 +1,9 @@
 package ch.fwesterath.kahlifarspringapi.models;
 
+import ch.fwesterath.kahlifarspringapi.models.economy.EconomyInventory;
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.Date;
 import java.util.Set;
@@ -9,6 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "user")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@DynamicUpdate
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +25,11 @@ public class User {
     private Date birthday;
 
     @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
-    @JsonManagedReference
     private Set<DiscordUser> discordUsers;
+
+    @OneToOne(mappedBy = "user")
+    private EconomyInventory economyInventory;
+
     public User() {
     }
 
@@ -69,5 +75,11 @@ public class User {
         this.discordUsers = discordUsers;
     }
 
+    public EconomyInventory getEconomyInventory() {
+        return economyInventory;
+    }
 
+    public void setEconomyInventory(EconomyInventory economyInventory) {
+        this.economyInventory = economyInventory;
+    }
 }

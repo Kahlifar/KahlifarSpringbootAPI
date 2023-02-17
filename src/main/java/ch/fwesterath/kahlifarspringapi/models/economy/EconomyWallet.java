@@ -1,7 +1,6 @@
 package ch.fwesterath.kahlifarspringapi.models.economy;
 
 import ch.fwesterath.kahlifarspringapi.models.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
