@@ -6,7 +6,9 @@ import ch.fwesterath.kahlifarspringapi.models.economy.EconomyItem;
 import ch.fwesterath.kahlifarspringapi.repository.economy.EconomyInventoryRepository;
 import ch.fwesterath.kahlifarspringapi.repository.economy.EconomyItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -30,15 +32,17 @@ public class EconomyItemController {
 
     @PostMapping
     public EconomyItem createItem(@RequestBody EconomyItem ecoItem) {
-        if (ItemType.isValid(ecoItem.getType()))
-            return economyItemRepository.save(ecoItem);
-        else
-            throw new IllegalArgumentException("Invalid item type: " + ecoItem.getType());
-//        return economyItemRepository.save(ecoItem);
+        if (!ItemType.isValid(ecoItem.getType())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid item type: " + ecoItem.getType());
+        }
+        return economyItemRepository.save(ecoItem);
     }
 
     @PutMapping("/{id}")
     public EconomyItem updateItem(@PathVariable Long id, @RequestBody EconomyItem ecoItem) {
+        if (!ItemType.isValid(ecoItem.getType())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid item type: " + ecoItem.getType());
+        }
         ecoItem.setId(id);
         return economyItemRepository.save(ecoItem);
     }

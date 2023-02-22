@@ -7,11 +7,10 @@ import jakarta.persistence.*;
 import ch.fwesterath.kahlifarspringapi.helper.economy.ItemType;
 
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "eco_item")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class EconomyItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +32,10 @@ public class EconomyItem {
     @ManyToMany(mappedBy = "items")
     @JsonIgnore
     private List<EconomyInventory> inventories;
+
+    @ManyToMany(mappedBy = "items")
+//    @JsonIgnore
+    private List<EconomyShop> shops;
 
     public EconomyItem() {}
 

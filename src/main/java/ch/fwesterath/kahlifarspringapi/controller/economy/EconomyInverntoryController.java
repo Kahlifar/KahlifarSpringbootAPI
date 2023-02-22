@@ -2,10 +2,8 @@ package ch.fwesterath.kahlifarspringapi.controller.economy;
 
 import ch.fwesterath.kahlifarspringapi.models.economy.EconomyInventory;
 import ch.fwesterath.kahlifarspringapi.models.economy.EconomyItem;
-import ch.fwesterath.kahlifarspringapi.models.economy.EconomyWallet;
 import ch.fwesterath.kahlifarspringapi.repository.economy.EconomyInventoryRepository;
 import ch.fwesterath.kahlifarspringapi.repository.economy.EconomyItemRepository;
-import ch.fwesterath.kahlifarspringapi.repository.economy.EconomyWalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +56,9 @@ public class EconomyInverntoryController {
         economyInventoryRepository.deleteById(id);
     }
 
+//  ---------------
 //  Inventory Items
+//  ---------------
 
     @GetMapping("/{id}/items")
     public List<EconomyItem> getInventoryItems(@PathVariable("id") Long id) {
@@ -75,7 +75,9 @@ public class EconomyInverntoryController {
         try {
             EconomyInventory inventory = economyInventoryRepository.findById(id).get();
             EconomyItem item = economyItemRepository.findById(itemId).get();
-            inventory.getItems().add(item);
+            List<EconomyItem> items = inventory.getItems();
+            items.add(item);
+            inventory.setItems(items);
             return economyInventoryRepository.save(inventory);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.toString());
