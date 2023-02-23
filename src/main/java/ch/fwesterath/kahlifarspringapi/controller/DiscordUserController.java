@@ -10,22 +10,28 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
+@RequestMapping("/dcusers")
 public class DiscordUserController {
 
     @Autowired
     DiscordUserRepository discordUserRepository;
 
-    @GetMapping("/dcusers")
+    @GetMapping
     public Iterable<DiscordUser> getAllDiscordUsers() {
         return discordUserRepository.findAll();
     }
 
-    @GetMapping("/dcusers/{id}")
+    @GetMapping("/{id}")
     public DiscordUser getDiscordUserById(@PathVariable("id") Integer id) {
         return discordUserRepository.findById(id).get();
     }
 
-    @PostMapping("/dcusers")
+    @GetMapping("/byDiscordId/{discordId}")
+    public DiscordUser getDiscordUserByDiscordId(@PathVariable("discordId") Long discordId) {
+        return discordUserRepository.findByDiscordId(discordId);
+    }
+
+    @PostMapping
     public DiscordUser createDiscordUser(@RequestBody DiscordUser discordUser) {
         try {
             return discordUserRepository.save(discordUser);
@@ -36,21 +42,11 @@ public class DiscordUserController {
         }
     }
 
-    @PutMapping("/dcusers/{id}")
-    public DiscordUser updateDiscordUser(@PathVariable("id") Integer id, @RequestBody DiscordUser discordUser) {
+    @PutMapping("/{id}")
+    public DiscordUser updateDiscordUser(@PathVariable("id") Long id, @RequestBody DiscordUser discordUser) {
         try {
-            DiscordUser discordUserToUpdate = discordUserRepository.findById(id).get();
-
-            System.out.println(discordUser.getUser());
-            System.out.println(discordUserToUpdate.getUser());
-
-            discordUserToUpdate.setDiscord_id(discordUser.getDiscord_id());
-            discordUserToUpdate.setFirstJoinDate(discordUser.getFirstJoinDate());
-            discordUserToUpdate.setLastJoinDate(discordUser.getLastJoinDate());
-            discordUserToUpdate.setLeaveDate(discordUser.getLeaveDate());
-            discordUserToUpdate.setUser(discordUser.getUser());
-
-            return discordUserToUpdate;
+            discordUser.setId(id);
+            return discordUserRepository.save(discordUser);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.toString());
         }
